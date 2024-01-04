@@ -1,19 +1,36 @@
 import sys
 from PyQt5 import QtWidgets, uic, QtCore
+from PyQt5.QtWidgets import QSizePolicy
 
 class MyWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
         uic.loadUi('./myui.ui', self)
 
+        # Add event filters
         self.editAlbum.installEventFilter(self)
         self.editBook.installEventFilter(self)
         self.editMovie.installEventFilter(self)
 
+        # Connect the remove X buttons to their functions
         self.removeAlbumButton.clicked.connect(self.remove_album)
         self.removeBookButton.clicked.connect(self.remove_book)
         self.removeMovieButton.clicked.connect(self.remove_movie) 
         
+        # Setting the size policies so the GUI dynamically resizes
+        self.albumQueue.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.bookQueue.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.movieQueue.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+
+        self.editAlbum.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.editBook.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.editMovie.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+
+        self.removeAlbumButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.removeBookButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.removeMovieButton.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+
+
     # This is an 'event filter' for detecting when the enter key is pressed,
     # so we know when to add to which list.    
     def eventFilter(self, input_source, event):
@@ -29,19 +46,19 @@ class MyWindow(QtWidgets.QMainWindow):
 
     # Functions to add X to the 'X' queue
     def add_album(self):
-        album_name = self.editAlbum.text()
+        album_name = self.editAlbum.text() # set the album name to text in the input box
         if album_name:
             self.albumQueue.addItem(album_name)
-            self.editAlbum.clear()
+            self.editAlbum.clear() # clear the input after adding
 
     def add_book(self):
-        book_name = self.bookNameEdit.text()
+        book_name = self.editBook.text()
         if book_name:
             self.bookQueue.addItem(book_name)
             self.editBook.clear()
 
     def add_movie(self):
-        item_name = self.movieNameEdit.text()
+        item_name = self.editMovie.text()
         if item_name:
             self.movieQueue.addItem(item_name)
             self.editMovie.clear()
